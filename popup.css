@@ -1,0 +1,162 @@
+/* 4J4 MAYIN - CYBER-GLASS EDITION 
+   Bu tasarım tamamen derinlik ve fütüristik ışıklandırma üzerine kuruludur.
+*/
+
+:root {
+  --bg: #030508;
+  --glass: rgba(255, 255, 255, 0.02);
+  --glass-stroke: rgba(255, 255, 255, 0.1);
+  --primary: #00e5ff; /* Cyber Cyan */
+  --secondary: #7e22ce; /* Electric Purple */
+  --danger: #ff0055;
+  --text: #f1f5f9;
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  width: 350px; /* Biraz daha geniş, daha ferah */
+  background-color: var(--bg);
+  font-family: var(--font);
+  color: var(--text);
+  overflow: hidden;
+  /* Arka planda hareket eden hafif bir ışık süzmesi */
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(126, 34, 206, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(0, 229, 255, 0.05) 0px, transparent 50%);
+}
+
+.container {
+  padding: 24px;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Başlık Alanı (Minimalist & Glossy) --- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.brand h1 {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  background: linear-gradient(to right, #fff, var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.4));
+}
+
+#restart {
+  background: var(--glass);
+  border: 1px solid var(--glass-stroke);
+  color: var(--text);
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(10px);
+}
+
+#restart:hover {
+  background: var(--primary);
+  color: #000;
+  transform: rotate(180deg) scale(1.1);
+  box-shadow: 0 0 25px var(--primary);
+}
+
+/* --- Oyun Gridi (Cyber Grid) --- */
+#game {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 kolonlu yapı */
+  gap: 12px;
+  padding: 4px;
+}
+
+.cell {
+  aspect-ratio: 1;
+  background: var(--glass);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hücre üzerine gelince neon çerçeve parlaması */
+.cell:hover:not(.revealed) {
+  border-color: var(--primary);
+  background: rgba(0, 229, 255, 0.05);
+  transform: translateZ(10px) scale(1.1);
+  z-index: 10;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+.cell.revealed {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.8);
+  cursor: default;
+}
+
+.cell.mine {
+  background: var(--danger) !important;
+  border: none;
+  box-shadow: 0 0 30px var(--danger);
+  animation: mine-shake 0.4s infinite alternate;
+}
+
+.cell.flag::before {
+  content: "🚩";
+  font-size: 14px;
+  filter: drop-shadow(0 0 5px var(--danger));
+}
+
+/* --- Alt Bilgi Paneli --- */
+footer {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.status-bar {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-stroke);
+  padding: 14px;
+  border-radius: 18px;
+  font-size: 13px;
+  text-align: center;
+  color: #64748b;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(5px);
+}
+
+/* Sayı Renkleri (Neon Glow) */
+.cell[data-count="1"] { color: #00e5ff; text-shadow: 0 0 10px rgba(0, 229, 255, 0.6); }
+.cell[data-count="2"] { color: #00ff88; text-shadow: 0 0 10px rgba(0, 255, 136, 0.6); }
+.cell[data-count="3"] { color: #ffcc00; text-shadow: 0 0 10px rgba(255, 204, 0, 0.6); }
+.cell[data-count="4+"] { color: var(--danger); }
+
+/* Animasyonlar */
+@keyframes mine-shake {
+  from { transform: scale(1) rotate(0deg); }
+  to { transform: scale(1.1) rotate(5deg); }
+}
